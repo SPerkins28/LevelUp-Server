@@ -10,7 +10,7 @@ const Review = db.define('review', {
         type: DataTypes.STRING,
         allowNull: false
     },
-    id: {
+    gameId: {
         type: DataTypes.STRING,
         allowNull: false,
     },
