@@ -7,11 +7,11 @@ const Review = db.define('review', {
         allowNull: false,
     },
     date: {
-        type: DataTypes.STRING,
+        type: DataTypes.DATE,
         allowNull: false
     },
     gameId: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false,
     },
     entry: {
@@ -24,10 +24,7 @@ const Review = db.define('review', {
         validate: {
             max: 5
         },
-    },
-    username: {
-        type: DataTypes.STRING
-    },
+    }
 });
 
 module.exports = Review;

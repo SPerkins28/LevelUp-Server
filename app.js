@@ -3,15 +3,14 @@ const express = require('express');
 const db = require('./db');
 const app = express();
 
-app.use(require('./middleware/headers'));
 
 const controller = require('./controllers');
-// const validateSession = require('./middleware/validateSession');
 
 app.use(express.json());
 
+app.use(require('./middleware/headers'));
 app.use("/user", controller.usercontroller);
-// app.use("/review", controller.reviewcontroller);
+app.use("/review", controller.reviewcontroller);
 // app.use("/favorites", controller.favoritescontroller);
 // app.use("/library,", controller.librarycontroller);
 
