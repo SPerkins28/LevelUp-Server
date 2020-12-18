@@ -11,7 +11,7 @@ app.use(express.json());
 app.use(require('./middleware/headers'));
 app.use("/user", controller.usercontroller);
 app.use("/review", controller.reviewcontroller);
-// app.use("/favorites", controller.favoritescontroller);
+app.use("/wanttoplay", controller.wanttoplaycontroller);
 // app.use("/library,", controller.librarycontroller);
 
 db.authenticate()

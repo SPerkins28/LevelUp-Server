@@ -4,7 +4,7 @@ const Review = require('../models/review');
 
 /* CREATE REVIEW */
 router.post('/create', validateSession, async (req, res) => {
-    console.log(req.body.review.title, req.body.review.date, req.body.review.gameId, req.body.review.entry, req.body.review.rating, req.user.id)
+    
     try {
         const newReview = await Review.create({
             title: req.body.review.title,
@@ -29,7 +29,6 @@ router.post('/create', validateSession, async (req, res) => {
 /* GET ALL REVIEWS FOR GAME */
 router.get('/games/:gameId', validateSession, async (req, res) => {
     const gameId = req.params.gameId;
-    console.log(gameId)
     try {
         let reviews = await Review.findAll({where: {gameId: gameId}, include: 'user'})
         res.status(200).json({
@@ -47,7 +46,6 @@ router.get('/games/:gameId', validateSession, async (req, res) => {
 /* GET ALL REVEIWS BY USER ID */
 router.get('/user/:userId', validateSession, async (req, res) => {
     const userId = req.params.userId;
-    console.log(userId);
     try {
         let userReviews = await Review.findAll({where: {userId: userId}, include: 'user'})
         res.status(200).json({
@@ -89,16 +87,14 @@ router.put('/:id', validateSession, async (req, res) => {
 router.delete('/:id', validateSession, async (req, res) => {
     try {
         const query = req.params.id;
-        await Review.destroy({where: {id: query}})
+        let locatedDeletedReview = await Review.findOne({where: {id: query} })
+        Review.destroy({where: {id: query}})
         .then((deletedReview) => {
-            Review.findOne({where: {id: query} })
-            .then((locatedDeletedReview) => {
                 res.status(200).json({
                     deletedReview: deletedReview,
                     message: "Review destroyed successfully! You received 5 useless parts...",
                     locatedDelete: locatedDeletedReview
-                })
-            })
+                })                                  
         });
     } catch (error) {
         res.status(500).json({
