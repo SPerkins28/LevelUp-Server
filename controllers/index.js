@@ -4,4 +4,5 @@ module.exports = {
     reviewcontroller: require('./reviewcontroller'),
     wanttoplaycontroller: require('./wanttoplaycontroller'),
     librarycontroller: require('./librarycontroller')
+
 }

@@ -5,7 +5,7 @@ const validateSession = require('../middleware/validateSession');
 /* ADD TO WANT TO PLAY LIST */
 router.post('/', validateSession, async (req, res) => {
     try {
-        const addGame = await WantToPlay.create({
+        await WantToPlay.create({
             title: req.body.title,
             gameId: req.body.gameId,
             gameImg: req.body.gameImg,
