@@ -63,7 +63,7 @@ router.post('/login', async (req, res) => {
         }
     } catch (error) {
         res.status(500).json({
-            error: "Error loggin in!"
+            error: "Error loggin in: Player not ready!"
         });
     }
 });
@@ -72,36 +72,45 @@ router.post('/login', async (req, res) => {
 router.put('/username/:id', validateSession, async (req, res) => {
     const query = req.params.id
 
+    try {
     User.update(req.body, {where: {id: query}})
         .then((usernameUpdated) => {
             User.findOne({where: {id: query}})
                 .then((locatedUpdatedUsername) => {
                     res.status(200).json({
                         username: locatedUpdatedUsername,
-                        message: "Player 1 username updated successfully!",
+                        message: "Player username updated successfully!",
                         usernameChanged: usernameUpdated,
                     });
                 });
         })
-        .catch((err) => res.json(err));
+    }catch(error) {
+        res.status(500).json({
+            error: "You failed! Try again!"
+        });
+    }
 })
 
 /* UPDATE PASSWORD */
 router.put('/password/:id', validateSession, async (req, res) => {
     const query = req.params.id
-
+    try{
     User.update({password: bcrypt.hashSync(req.body.password, 13)}, {where: {id: query}})
         .then((passwordUpdated) => {
             User.findOne({where: {id: query}})
                 .then((locatedUpdatedPassword) => {
                     res.status(200).json({
                         password: locatedUpdatedPassword,
-                        message: "Player 1 password updated successfully!",
+                        message: "Player password updated successfully!",
                         passwordChanged: passwordUpdated,
                     });
                 });
         })
-        .catch((err) => res.json(err));
+    }catch(error) {
+        res.status(500).json({
+            error: "You failed! Try again!"
+        })
+    }
 })
 
 module.exports = router;
