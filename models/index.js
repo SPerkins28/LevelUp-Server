@@ -3,11 +3,11 @@ const Reviews = require('./review');
 const WantToPlay = require('./wanttoplay');
 const Library = require('./library');
 
-// User.hasOne(Library);
+User.hasOne(Library);
 
 Reviews.belongsTo(User);
 WantToPlay.belongsTo(User);
-// Library.belongsTo(User);
+Library.belongsTo(User);
 
 User.hasMany(Reviews);
 User.hasMany(WantToPlay);
