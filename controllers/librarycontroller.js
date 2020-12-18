@@ -5,7 +5,7 @@ const validateSession = require('../middleware/validateSession');
 /* ADD TO LIBRARY */
 router.post('/', validateSession, async (req, res) => {
     try {
-        const addGame = await Library.create({
+        await Library.create({
             title: req.body.title,
             gameId: req.body.gameId,
             gameImg: req.body.gameImg,
