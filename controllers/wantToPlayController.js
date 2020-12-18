@@ -1,5 +1,5 @@
 const router = require('express').Router();
-const WantToPlay = require('../models/wantToPlay');
+const WantToPlay = require('../models/wanttoplay');
 const validateSession = require('../middleware/validateSession');
 
 /* ADD TO WANT TO PLAY LIST */
@@ -7,11 +7,12 @@ router.post('/', validateSession, async (req, res) => {
     try {
         const addGame = await WantToPlay.create({
             title: req.body.title,
-            gameId: req.body.id,
-            gameImg: req.body.background_image,
-            releaseDate: req.body.released,
+            gameId: req.body.gameId,
+            gameImg: req.body.gameImg,
+            releaseDate: req.body.releaseDate,
             played: req.body.played,
-            uniqueCheck: `game${req.body.gameId}user${req.user.id}`
+            uniqueCheck: `game${req.body.gameId}user${req.user.id}`,
+            userId: req.user.id
         })
         .then(game => res.status(200).json({
             message: `${game.title} has been added to your list. Now go play it!`
@@ -25,7 +26,7 @@ router.post('/', validateSession, async (req, res) => {
 
 /* GET WANT TO PLAY BY USER ID */
 router.get('/:id', validateSession, async (req, res) => {
-    const userId = req.params.userId;
+    const userId = req.params.id;
     try {
         let userWantToPlay = await WantToPlay.findAll({where: {userId: userId}, include: 'user'})
         res.status(200).json({
@@ -41,7 +42,7 @@ router.get('/:id', validateSession, async (req, res) => {
 }),
 
 /* CHANGE PLAYED STATUS */
-router.put(':id', validateSession, async (req, res) => {
+router.put('/:id', validateSession, async (req, res) => {
     const updateWantToPlay = {
         played: req.body.played
     };
@@ -71,16 +72,14 @@ router.put(':id', validateSession, async (req, res) => {
 router.delete('/delete/:id', validateSession, async (req, res) => {
     try {
         const query = req.params.id;
-        await WantToPlay.destroy({where: query})
+        const locatedRemovedGame = await WantToPlay.findOne({where: {id: query}})
+        WantToPlay.destroy({where: {id: query}})
         .then((removedGame) => {
-            WantToPlay.findOne({where: {id: query}})
-            .then((locatedRemovedGame) => {
                 res.status(200).json({
                     removedGame: removedGame,
                     message: "Game removed!",
                     locatedRemovedGame: locatedRemovedGame
                 })
-            })
         })
     } catch (error) {
         res.status(500).json({

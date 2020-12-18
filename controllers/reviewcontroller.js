@@ -87,16 +87,14 @@ router.put('/:id', validateSession, async (req, res) => {
 router.delete('/:id', validateSession, async (req, res) => {
     try {
         const query = req.params.id;
-        await Review.destroy({where: {id: query}})
+        let locatedDeletedReview = await Review.findOne({where: {id: query} })
+        Review.destroy({where: {id: query}})
         .then((deletedReview) => {
-            Review.findOne({where: {id: query} })
-            .then((locatedDeletedReview) => {
                 res.status(200).json({
                     deletedReview: deletedReview,
                     message: "Review destroyed successfully! You received 5 useless parts...",
                     locatedDelete: locatedDeletedReview
-                })
-            })                                   
+                })                                  
         });
     } catch (error) {
         res.status(500).json({

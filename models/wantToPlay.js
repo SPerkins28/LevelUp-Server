@@ -7,14 +7,16 @@ const WantToPlay = db.define('wanttoplay', {
         allowNull: false
     },
     gameId: {
-        type: DataTypes.STRING,
+        type: DataTypes.INTEGER,
         allowNull: false
     },
     gameImg: {
         type: DataTypes.STRING,
+        allowNull: false,
     },
     releaseDate: {
-        type: DataTypes.STRING
+        type: DataTypes.STRING,
+        allowNull: false
     },
     played: {
         type: DataTypes.BOOLEAN,

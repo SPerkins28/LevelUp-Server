@@ -1,6 +1,6 @@
 const User = require('./user');
 const Reviews = require('./review');
-const WantToPlay = require('./wantToPlay');
+const WantToPlay = require('./wanttoplay');
 const Library = require('./library');
 
 // User.hasOne(Library);
