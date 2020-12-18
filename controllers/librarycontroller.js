@@ -15,7 +15,7 @@ router.post('/', validateSession, async (req, res) => {
             userId: req.user.id
         })
         .then(game => res.status(200).json({
-            message: `${game.title} has been added to your list. Now go play it!`
+            message: `${game.title} has been added to your Library!`,
         }))
     } catch (error) {
         res.status(500).json({
@@ -31,7 +31,7 @@ router.get('/:id', validateSession, async (req, res) => {
         let userLibrary = await Library.findAll({where: {userId: userId}, include: 'user'})
         res.status(200).json({
             userLibrary: userLibrary,
-            message: "You have found your want to play list! Now play some games!"
+            message: "You have found your Library! Now play some games!"
         })
     } catch (error) {
         res.status(500).json({
@@ -44,7 +44,7 @@ router.get('/:id', validateSession, async (req, res) => {
 /* CHANGE PLAYED STATUS */
 router.put('/:id', validateSession, async (req, res) => {
     const updateLibrary = {
-        played: req.body.played
+        finished: req.body.finished
     };
 
     try {
@@ -55,14 +55,14 @@ router.put('/:id', validateSession, async (req, res) => {
             .then((locatedUpdatedLibrary) => {
                 res.status(200).json({
                     updated: locatedUpdatedLibrary,
-                    message: "Congratulations on playing this game!",
+                    message: "What are you going to play now?",
                     updatedList: updatedLibrary,
                 })
             })
         });
     } catch (error) {
         res.status(500).json({
-            message: "Did you really play this game yet? Game not removed!",
+            message: "Did you really finish this game yet?",
             error: error
         });
     }

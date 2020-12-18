@@ -12,7 +12,7 @@ app.use(require('./middleware/headers'));
 app.use("/user", controller.usercontroller);
 app.use("/review", controller.reviewcontroller);
 app.use("/wanttoplay", controller.wanttoplaycontroller);
-// app.use("/library,", controller.librarycontroller);
+app.use("/library", controller.librarycontroller);
 
 db.authenticate()
 .then(() => db.sync())
