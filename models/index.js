@@ -1,15 +1,15 @@
 const User = require('./user');
 const Reviews = require('./review');
-const Favorites = require('./favorites');
+const WantToPlay = require('./wantToPlay');
 const Library = require('./library');
 
 // User.hasOne(Library);
 
 Reviews.belongsTo(User);
-// Favorites.belongsTo(User);
+WantToPlay.belongsTo(User);
 // Library.belongsTo(User);
 
 User.hasMany(Reviews);
-// User.hasMany(Favorites);
+User.hasMany(WantToPlay);
 
-module.exports = {User, Reviews, Favorites, Library};
+module.exports = {User, Reviews, WantToPlay, Library};
