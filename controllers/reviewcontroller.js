@@ -1,6 +1,5 @@
 const router = require('express').Router();
 const validateSession = require('../middleware/validateSession');
-const User = require('../models/user');
 const Review = require('../models/review');
 
 /* CREATE REVIEW */
