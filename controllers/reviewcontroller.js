@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const validateSession = require('../middleware/validateSession');
+const User = require('../models/user');
 const Review = require('../models/review');
 
 /* CREATE REVIEW */
@@ -86,7 +87,14 @@ router.put('/:id', validateSession, async (req, res) => {
 /* DELETE REVIEWS BY REVEIW ID */
 router.delete('/:id', validateSession, async (req, res) => {
     try {
+        const review = await Review.findOne({where: {id: req.params.id}});
         const query = req.params.id;
+
+        console.log(review.userId);
+        console.log(req.user.id);
+        console.log(req.user.role);
+
+        if (review.userId === req.user.id || req.user.role === 'admin'){
         let locatedDeletedReview = await Review.findOne({where: {id: query} })
         Review.destroy({where: {id: query}})
         .then((deletedReview) => {
@@ -95,7 +103,11 @@ router.delete('/:id', validateSession, async (req, res) => {
                     message: "Review destroyed successfully! You received 5 useless parts...",
                     locatedDelete: locatedDeletedReview
                 })                                  
-        });
+        })} else {
+            res.status(401).json({
+                error: 'You are not the required level to use this action!'
+            })
+        };
     } catch (error) {
         res.status(500).json({
             error: error,

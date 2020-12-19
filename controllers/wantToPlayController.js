@@ -71,16 +71,27 @@ router.put('/:id', validateSession, async (req, res) => {
 /* DELETE FROM LIST */
 router.delete('/delete/:id', validateSession, async (req, res) => {
     try {
+        const gameAdded = await WantToPlay.findOne({where: {id: req.params.id}});
         const query = req.params.id;
-        const locatedRemovedGame = await WantToPlay.findOne({where: {id: query}})
-        WantToPlay.destroy({where: {id: query}})
-        .then((removedGame) => {
-                res.status(200).json({
-                    removedGame: removedGame,
-                    message: "Game removed!",
-                    locatedRemovedGame: locatedRemovedGame
-                })
-        })
+
+        console.log(gameAdded.userId);
+        console.log(req.user.id);
+        console.log(req.user.role);
+
+        if (gameAdded.userId === req.user.id || req.user.role === 'admin') {
+            let locatedRemovedGame = await WantToPlay.findOne({where: {id: query}})
+            WantToPlay.destroy({where: {id: query}})
+            .then((removedGame) => {
+                    res.status(200).json({
+                        removedGame: removedGame,
+                        message: "Game removed!",
+                        locatedRemovedGame: locatedRemovedGame
+                    })
+        })} else {
+            res.status(401).json({
+                error: 'You are not the required level to use this action!'
+            })
+        }
     } catch (error) {
         res.status(500).json({
             error: error,
