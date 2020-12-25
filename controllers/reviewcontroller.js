@@ -27,7 +27,7 @@ router.post('/create', validateSession, async (req, res) => {
 }),
 
 /* GET ALL REVIEWS FOR GAME */
-router.get('/games/:gameId', validateSession, async (req, res) => {
+router.get('/games/:gameId', async (req, res) => {
     const gameId = req.params.gameId;
     try {
         let reviews = await Review.findAll({where: {gameId: gameId}, include: 'user'})
