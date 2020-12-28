@@ -21,7 +21,7 @@ router.post('/register', async (req, res) => {
         });
         let token = jwt.sign({id: newUser.id},process.env.JWT_SECRET, {expiresIn: 60 * 60 * 24});
         res.status(201).json({
-            message: "Player 1 Created!",
+            message: "Ready Player One!",
             user: newUser,
             sessionToken: token
         });
