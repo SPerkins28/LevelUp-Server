@@ -23,6 +23,8 @@ router.post('/register', async (req, res) => {
         res.status(201).json({
             message: "Ready Player One!",
             user: newUser,
+            userId: newUser.id,
+            role: newUser.role,
             sessionToken: token
         });
     } catch (error) {
@@ -55,6 +57,8 @@ router.post('/login', async (req, res) => {
             res.status(201).json({
                 message: "Ready Player One!",
                 user: loginUser,
+                userId: loginUser.id,
+                role: loginUser.role,
                 sessionToken: token,
             });
         } else {

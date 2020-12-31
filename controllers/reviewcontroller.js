@@ -104,7 +104,7 @@ router.delete('/:id', validateSession, async (req, res) => {
                 })                                  
         })} else {
             res.status(401).json({
-                error: 'You are not the required level to use this action!'
+                error: 'You are not the required level to use this action! Level Up!'
             })
         };
     } catch (error) {
