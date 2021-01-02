@@ -51,12 +51,11 @@ router.put('/:id', validateSession, async (req, res) => {
         const query = req.params.id;
         await WantToPlay.update(updateWantToPlay, {where: {id: query}})
         .then((updatedList) => {
-            WantToPlay.findOne({where: {id: query}})
+            WantToPlay.findAll({where: {userId: req.user.id}})
             .then((locatedUpdatedList) => {
                 res.status(200).json({
-                    updated: locatedUpdatedList,
-                    message: "Congratulations on playing this game!",
-                    updatedList: updatedList,
+                    updatedList: locatedUpdatedList,
+                    message: "Status updated!",
                 })
             })
         });

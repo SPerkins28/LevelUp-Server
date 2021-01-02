@@ -51,12 +51,11 @@ router.put('/:id', validateSession, async (req, res) => {
         const query = req.params.id;
         await Library.update(updateLibrary, {where: {id: query}})
         .then((updatedLibrary) => {
-            Library.findOne({where: {id: query}})
+            Library.findAll({where: {userId: req.user.id}})
             .then((locatedUpdatedLibrary) => {
                 res.status(200).json({
-                    updated: locatedUpdatedLibrary,
+                    updatedList: locatedUpdatedLibrary,
                     message: "What are you going to play now?",
-                    updatedList: updatedLibrary,
                 })
             })
         });
