@@ -78,13 +78,12 @@ router.delete('/delete/:id', validateSession, async (req, res) => {
         console.log(req.user.role);
 
         if (gameAdded.userId === req.user.id || req.user.role === 'admin') {
-            let locatedRemovedGame = await WantToPlay.findOne({where: {id: query}})
-            WantToPlay.destroy({where: {id: query}})
+            let locatedRemovedGame = await WantToPlay.findAll({where: {userId: req.user.id}})
+            await WantToPlay.destroy({where: {id: query}})
             .then((removedGame) => {
                     res.status(200).json({
-                        removedGame: removedGame,
+                        updatedList: locatedRemovedGame,
                         message: "Game removed!",
-                        locatedRemovedGame: locatedRemovedGame
                     })
         })} else {
             res.status(401).json({
