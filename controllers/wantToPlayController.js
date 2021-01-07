@@ -15,17 +15,16 @@ router.post("/", validateSession, async (req, res) => {
       uniqueCheck: `game${req.body.gameId}user${req.user.id}`,
       userId: req.user.id,
     });
-    console.log(newWTP.uniqueCheck); //# Trying to compare uniqueCheck to throw error message if game is already in WTP List
-    console.log(alreadyOnList);
-    if (newWTP.uniqueCheck === alreadyOnList) {
-      res.status(500).json({
-        message: `${newWTP.title} is already on your list!`,
-      });
-    } else {
+    // console.log(newWTP.uniqueCheck);  //# Trying to compare uniqueCheck to throw error message if game is already in WTP List
+    // console.log(alreadyOnList);
+    // if (newWTP.uniqueCheck === alreadyOnList) {
+    //   res.status(500).json({
+    //     message: `${newWTP.title} is already on your list!`,
+    //   });
+    // } else {
       res.status(200).json({
         message: `${newWTP.title} has been added to your list. Now go play it!`,
       });
-    }
   } catch (error) {
     res.status(500).json({
       error: error,
