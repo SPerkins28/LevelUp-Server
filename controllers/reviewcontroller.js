@@ -62,18 +62,23 @@ router.post("/create", validateSession, async (req, res) => {
       });
     }
   }),
-  /* UPDATE REVIEWS BY REVIEW ID */
-  router.put("/:id", validateSession, async (req, res) => {
+  /* UPDATE REVIEWS FOR GAME BY REVIEW ID */
+  router.put("/game/:id", validateSession, async (req, res) => {
     try {
       const query = req.params.id;
+      const review = await Review.findOne({ where: { id: query } });
+      console.log(`GameId: ${review.gameId}`);
       const reviewToUpdate = await Review.update(req.body, {
         where: { id: query },
       });
-      const updatedReview = await Review.findOne({ where: { id: query } });
+      const updatedReviews = await Review.findAll({
+        where: { gameId: review.gameId },
+        include: "user",
+      });
       res.status(200).json({
         editedReview: reviewToUpdate,
         message: "Quest Completed: Review Updated!",
-        updatedReview: updatedReview,
+        updatedReviews: updatedReviews,
       });
     } catch (error) {
       res.status(500).json({
@@ -82,8 +87,33 @@ router.post("/create", validateSession, async (req, res) => {
       });
     }
   }),
-  /* DELETE REVIEWS BY REVEIW ID */
-  router.delete("/:id", validateSession, async (req, res) => {
+  /* UPDATE REVIEWS FOR USER BY REVIEW ID */
+  router.put("/user/:id", validateSession, async (req, res) => {
+    try {
+      const query = req.params.id;
+      const review = await Review.findOne({ where: { id: query } });
+      console.log(`GameId: ${review.gameId}`);
+      const reviewToUpdate = await Review.update(req.body, {
+        where: { id: query },
+      });
+      const updatedReviews = await Review.findAll({
+        where: { userId: review.userId },
+        include: "user",
+      });
+      res.status(200).json({
+        editedReview: reviewToUpdate,
+        message: "Quest Completed: Review Updated!",
+        updatedReviews: updatedReviews,
+      });
+    } catch (error) {
+      res.status(500).json({
+        message: "Quest Failed: Review not updated!",
+        error: error,
+      });
+    }
+  }),
+  /* DELETE REVIEWS FOR GAME BY REVEIW ID */
+  router.delete("/game/:id", validateSession, async (req, res) => {
     try {
       const review = await Review.findOne({ where: { id: req.params.id } });
       const query = req.params.id;
@@ -96,12 +126,51 @@ router.post("/create", validateSession, async (req, res) => {
         let locatedDeletedReview = await Review.findOne({
           where: { id: query },
         });
-        const reviewToDelete = await Review.destroy({ where: { id: query } })
-          res.status(200).json({
-            deletedReview: reviewToDelete,
-            message:
-              "Review destroyed successfully! You received 5 useless parts...",
-          });
+        const reviewToDelete = await Review.destroy({ where: { id: query } });
+        const updatedReviews = await Review.findAll({
+          where: { gameId: review.gameId },
+          include: "user",
+        });
+        res.status(200).json({
+          deletedReview: reviewToDelete,
+          message:
+            "Review destroyed successfully! You received 5 useless parts...",
+          updatedReviews: updatedReviews,
+        });
+      } else {
+        res.status(401).json({
+          error: "You are not the required level to use this action! Level Up!",
+        });
+      }
+    } catch (error) {
+      res.status(500).json({
+        error: error,
+        message: "Review not destroyed. Try better next time!",
+      });
+    }
+  }),
+  /* DELETE REVIEWS FOR USER BY REVEIW ID */
+  router.delete("/user/:id", validateSession, async (req, res) => {
+    try {
+      const review = await Review.findOne({ where: { id: req.params.id } });
+      const query = req.params.id;
+
+      console.log(review.userId);
+      console.log(req.user.id);
+      console.log(req.user.role);
+
+      if (review.userId === req.user.id || req.user.role === "admin") {
+        const reviewToDelete = await Review.destroy({ where: { id: query } });
+        const updatedReviews = await Review.findAll({
+          where: { userId: review.userId },
+          include: "user",
+        });
+        res.status(200).json({
+          deletedReview: reviewToDelete,
+          message:
+            "Review destroyed successfully! You received 5 useless parts...",
+          updatedReviews: updatedReviews,
+        });
       } else {
         res.status(401).json({
           error: "You are not the required level to use this action! Level Up!",

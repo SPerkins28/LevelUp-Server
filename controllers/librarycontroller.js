@@ -79,11 +79,11 @@ router.post("/", validateSession, async (req, res) => {
         let updatedList = await Library.findAll({
           where: { userId: req.user.id },
         });
-        await Library.destroy({ where: { id: query } })
-          res.status(200).json({
-            removedGame: updatedList,
-            message: "Game removed!",
-          });
+        await Library.destroy({ where: { id: query } });
+        res.status(200).json({
+          removedGame: updatedList,
+          message: "Game removed!",
+        });
       } else {
         res.status(401).json({
           error: "You are not the required level to use this action! Level Up!",

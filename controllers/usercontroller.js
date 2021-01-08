@@ -5,6 +5,7 @@ const validateSession = require("../middleware/validateSession");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const { UniqueConstraintError } = require("sequelize/lib/errors");
+const { findAll } = require("../models/user");
 
 /* SIGN UP */
 router.post("/register", async (req, res) => {
@@ -75,6 +76,42 @@ router.post("/login", async (req, res) => {
   }
 });
 
+/* GET ALL USERS */
+router.get("/userlist/", validateSession, async (req, res) => {
+  try {
+    const allUsers = await User.findAll({
+      include: ["reviews", "wanttoplays", "libraries"],
+    });
+    res.status(200).json({
+      userList: allUsers,
+      message: "You opened the chest and found all these users!",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "You opened the chest and found absolutely nothing....",
+      error: error,
+    });
+  }
+});
+
+/* UPDATE USER ROLE */
+router.put("/role/:id", validateSession, async (req, res) => {
+  const query = req.params.id;
+
+  try {
+    await User.update(req.body, { where: { id: query } });
+    const updatedUser = await User.findOne({ where: { id: query } });
+    res.status(200).json({
+      updatedUserRole: updatedUser,
+      message: "Player role updated successfully!",
+    });
+  } catch (error) {
+    res.status(500).json({
+      error: "Player role updated failed!",
+    });
+  }
+});
+
 /* UPDATE USERNAME */
 router.put("/username/:id", validateSession, async (req, res) => {
   const query = req.params.id;
@@ -97,12 +134,15 @@ router.put("/username/:id", validateSession, async (req, res) => {
 router.put("/password/:id", validateSession, async (req, res) => {
   const query = req.params.id;
   try {
-    await User.update({ password: bcrypt.hashSync(req.body.password, 13) }, { where: { id: query } });
+    await User.update(
+      { password: bcrypt.hashSync(req.body.password, 13) },
+      { where: { id: query } }
+    );
     const updatedPassword = await User.findOne({ where: { id: query } });
-        res.status(200).json({
-          updatedPassword: updatedPassword,
-          message: "Player password updated successfully!",
-        });
+    res.status(200).json({
+      updatedPassword: updatedPassword,
+      message: "Player password updated successfully!",
+    });
   } catch (error) {
     res.status(500).json({
       error: "You failed! Try again!",

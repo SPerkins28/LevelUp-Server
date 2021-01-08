@@ -5,7 +5,6 @@ const validateSession = require("../middleware/validateSession");
 /* ADD TO WANT TO PLAY LIST */
 router.post("/", validateSession, async (req, res) => {
   try {
-    const alreadyOnList = await WantToPlay.findAll({where: {userId: req.user.id}})
     const newWTP = await WantToPlay.create({
       title: req.body.title,
       gameId: req.body.gameId,
@@ -15,16 +14,15 @@ router.post("/", validateSession, async (req, res) => {
       uniqueCheck: `game${req.body.gameId}user${req.user.id}`,
       userId: req.user.id,
     });
-    // console.log(newWTP.uniqueCheck);  //# Trying to compare uniqueCheck to throw error message if game is already in WTP List
-    // console.log(alreadyOnList);
-    // if (newWTP.uniqueCheck === alreadyOnList) {
-    //   res.status(500).json({
-    //     message: `${newWTP.title} is already on your list!`,
-    //   });
+    // const alreadyOnList = await WantToPlay.findAll({where: {userId: req.user.id}})
+    // if (req.body.uniqueCheck === alreadyOnList) {
+    //     res.status(500).json({
+    //         message: `${newWTP.title} is already on your list!`,
+    //       });
     // } else {
-      res.status(200).json({
-        message: `${newWTP.title} has been added to your list. Now go play it!`,
-      });
+    res.status(200).json({
+      message: `${newWTP.title} has been added to your list. Now go play it!`,
+    });
   } catch (error) {
     res.status(500).json({
       error: error,
