@@ -5,7 +5,13 @@ const validateSession = require("../middleware/validateSession");
 /* ADD TO LIBRARY */
 router.post("/", validateSession, async (req, res) => {
   try {
-    const newLibrary = await Library.create({
+    const userRole = req.user.role;
+    if (userRole === "banned") {
+      res.status(401).json({
+        message:
+          "Quest Falied: Your account does not have permission to add games to your library.",
+      });
+    } else {const newLibrary = await Library.create({
       title: req.body.title,
       gameId: req.body.gameId,
       gameImg: req.body.gameImg,
@@ -17,6 +23,7 @@ router.post("/", validateSession, async (req, res) => {
     res.status(200).json({
       message: `${newLibrary.title} has been added to your Library!`,
     });
+  }
   } catch (error) {
     res.status(500).json({
       error: error,

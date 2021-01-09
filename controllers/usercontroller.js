@@ -51,7 +51,28 @@ router.post("/login", async (req, res) => {
     let loginUser = await User.findOne({
       where: { username },
     });
-    if (loginUser && (await bcrypt.compare(password, loginUser.password))) {
+    if (
+      loginUser &&
+      (await bcrypt.compare(password, loginUser.password)) &&
+      loginUser.role === "banned"
+    ) {
+      const token = jwt.sign(
+        { id: loginUser.id, username: loginUser.username },
+        process.env.JWT_SECRET,
+        { expiresIn: 60 * 60 * 24 }
+      );
+      res.status(200).json({
+        message:
+          "Your account has been banned: You will no longer be allowed to create or updated content.",
+        user: loginUser,
+        userId: loginUser.id,
+        role: loginUser.role,
+        sessionToken: token,
+      });
+    } else if (
+      loginUser &&
+      (await bcrypt.compare(password, loginUser.password))
+    ) {
       const token = jwt.sign(
         { id: loginUser.id, username: loginUser.username },
         process.env.JWT_SECRET,

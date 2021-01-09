@@ -5,18 +5,26 @@ const Review = require("../models/review");
 /* CREATE REVIEW */
 router.post("/create", validateSession, async (req, res) => {
   try {
-    const newReview = await Review.create({
-      title: req.body.review.title,
-      date: req.body.review.date,
-      gameId: req.body.review.gameId,
-      entry: req.body.review.entry,
-      rating: req.body.review.rating,
-      userId: req.user.id,
-    });
-    res.status(201).json({
-      message: "Quest Completed: Review submitted!",
-      review: newReview,
-    });
+    const userRole = req.user.role;
+    if (userRole === "banned") {
+      res.status(401).json({
+        message:
+          "Quest Falied: Your account does not have permission to post reviews",
+      });
+    } else {
+      const newReview = await Review.create({
+        title: req.body.review.title,
+        date: req.body.review.date,
+        gameId: req.body.review.gameId,
+        entry: req.body.review.entry,
+        rating: req.body.review.rating,
+        userId: req.user.id,
+      });
+      res.status(201).json({
+        message: "Quest Completed: Review submitted!",
+        review: newReview,
+      });
+    }
   } catch (error) {
     res.status(500).json({
       message: "Quest Failed: Review not submitted!",
@@ -68,6 +76,12 @@ router.post("/create", validateSession, async (req, res) => {
       const query = req.params.id;
       const review = await Review.findOne({ where: { id: query } });
       console.log(`GameId: ${review.gameId}`);
+      if (req.user.role === "banned"){
+        res.status(401).json({
+          message:
+            "Quest Falied: Your account does not have permission to update reviews",
+        });
+      } else {
       const reviewToUpdate = await Review.update(req.body, {
         where: { id: query },
       });
@@ -80,6 +94,7 @@ router.post("/create", validateSession, async (req, res) => {
         message: "Quest Completed: Review Updated!",
         updatedReviews: updatedReviews,
       });
+    }
     } catch (error) {
       res.status(500).json({
         message: "Quest Failed: Review not updated!",
@@ -122,10 +137,12 @@ router.post("/create", validateSession, async (req, res) => {
       console.log(req.user.id);
       console.log(req.user.role);
 
-      if (review.userId === req.user.id || req.user.role === "admin") {
-        let locatedDeletedReview = await Review.findOne({
-          where: { id: query },
+      if (req.user.role === "banned") {
+        res.status(401).json({
+          message:
+            "Quest Falied: Your account does not have permission to post reviews",
         });
+      } else if (review.userId === req.user.id || req.user.role === "admin") {
         const reviewToDelete = await Review.destroy({ where: { id: query } });
         const updatedReviews = await Review.findAll({
           where: { gameId: review.gameId },
