@@ -63,7 +63,7 @@ router.post("/login", async (req, res) => {
       );
       res.status(200).json({
         message:
-          "Your account has been banned: You will no longer be allowed to create or updated content.",
+          "Your account has been banned: You will no longer be allowed to create or update content.",
         user: loginUser,
         userId: loginUser.id,
         role: loginUser.role,
