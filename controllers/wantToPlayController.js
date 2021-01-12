@@ -1,5 +1,5 @@
 const router = require("express").Router();
-const WantToPlay = require("../models/wanttoplay");
+const WantToPlay = require("../models/wantToPlay");
 const validateSession = require("../middleware/validateSession");
 
 /* ADD TO WANT TO PLAY LIST */
