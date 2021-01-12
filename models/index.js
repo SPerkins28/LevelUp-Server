@@ -1,6 +1,6 @@
 const User = require("./user");
 const Reviews = require("./review");
-const WantToPlay = require("./wanttoplay");
+const WantToPlay = require("./wantToPlay");
 const Library = require("./library");
 
 Reviews.belongsTo(User);
