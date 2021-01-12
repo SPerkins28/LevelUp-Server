@@ -1,7 +1,7 @@
 const { DataTypes } = require("sequelize");
 const db = require("../db");
 
-const Library = db.define("library", {
+const WantToPlay = db.define("wanttoplay", {
   title: {
     type: DataTypes.STRING,
     allowNull: false,
@@ -18,7 +18,7 @@ const Library = db.define("library", {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  finished: {
+  played: {
     type: DataTypes.BOOLEAN,
     allowNull: false,
   },
@@ -28,4 +28,4 @@ const Library = db.define("library", {
   },
 });
 
-module.exports = Library;
+module.exports = WantToPlay;

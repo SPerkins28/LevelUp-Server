@@ -1,7 +1,6 @@
 module.exports = {
-    
-    usercontroller: require('./usercontroller'),
-    reviewcontroller: require('./reviewcontroller'),
-    favoritescontroller: require('./favoritescontroller'),
-    librarycontroller: require('./librarycontroller')
-}
+  usercontroller: require("./usercontroller"),
+  reviewcontroller: require("./reviewcontroller"),
+  wanttoplaycontroller: require("./wanttoplaycontroller"),
+  librarycontroller: require("./librarycontroller"),
+};
