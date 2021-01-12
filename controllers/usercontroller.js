@@ -101,9 +101,8 @@ router.post("/login", async (req, res) => {
 router.get("/userlist/", validateSession, async (req, res) => {
   try {
     const allUsers = await User.findAll({
-      include: ["reviews", "wanttoplays", "libraries"],
+      include: ["reviews", "wantToPlays", "libraries"],
     });
-    console.log(res)
     res.status(200).json({
       userList: allUsers,
       message: "You opened the chest and found all these users!",
